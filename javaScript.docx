@@ -1,0 +1,49 @@
+
+Array
+常用方法
+检索方法 find,findIndex,indexOf,lastIndexOf
+操作方法 concat,slice,splice,push,unshift,shift,pop,fill,copyWithin
+排序方法 reverse,sort
+遍历方法 filter,map,entries,keys,values,forEach,for...of,flat,flatMap
+转换方法 Array.form,Array.of,Array(),toLocalString,toString,toSource,join,valueOf
+判定方法 isArray,some,every,includes
+copyWithin(target,start,end): 将指定位置的元素复制到其他位置
+flat(delpth): 按照一个可指定深度递归数组，并得到新数组
+flatMap(function callback(currentValue[, index[, array]]) {}[, thisValue]: 与 map 连着深度值为1的 flat 几乎相同
+会改变原数组的操作方法：
+特征：
+1，会改变数组的长度或元素
+2，会对元素排序
+例如：splice,copyWithin：但是他不会改变数组长度,push,pop,unshift,shift,fill,reverse,sort
+不会改变原数组的操作方法：
+特征：
+1，进行提取，检索的操作
+2，返回值是一个新数组的方法
+例如：concat,slice,filter,map
+
+应用
+判断方法：
+some: 判断有某一元素是否符合
+every: 判断所有元素是否都符合
+includes: 判断数组中是否有莫元素,
+区别在于 includes 能够检测 NaN 等特殊类型
+isArray: 是否是Array对象
+建所方法：
+find: 是否存在某元素，返回*
+findIndex 
+indexOf
+lastIndexOf
+是否存在元素 返回 number
+却别在于find/findIndex能检测 NaN 等特殊类型
+
+// 跃过空性
+
+// 数组深浅拷贝
+
+
+
+
+this
+1，默认当前window 全局环境 2，当前window 3，函数独立调用/函数作为方法调用/内置或回调函数用调用则指向当前window 4，闭包(return xxx;)中this默认指向当前windows
+当函数被赋值给一个变量则this指向当前window  var a = {f:function(){}};var b= a.f;b.f();f中this指向当前window。隐式绑定
+此外谁直接调用函数this指向谁 obj.obj2.f(); this => obj2
