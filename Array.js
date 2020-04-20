@@ -20,6 +20,24 @@ naE:不计算空数组，naC:不改变原数组，waC:会改变原数组，nvE:�
 let concat = arr1.concat(arr2,arr3)
 console.log('concat:',concat) // concat: [ 1, 2, 3, 4, '6', true ]
 
+
+/* ---检索方法--- */
+
+
+// number / -1  indexOf(item,startIndex:起始位置) 若为负数则从后往前找
+let indexOf = arr1.indexOf(1,0) 
+let lastIndexOf = arr1.lastIndexOf(1,9)
+
+// \* 返回第一个匹配的元素否则返回undefined  但是他可识别NaN 此类的特殊类型
+let find = arr3.find(function(value,index,arr){
+    return typeof value == 'string'
+},thisValue) 
+console.log('find:',find, typeof find) // find: 6 string
+let findIndex = arr3.findIndex(function(value,index,arr){
+    return typeof value == 'string'
+},thisValue)
+console.log('find:',findIndex, typeof find) // find: 1 number
+
 // boolean some // 用于检测数组中是否有符合条件的元素
 let some = arr3.some(function(value,index,arr){
     return value = 4
@@ -35,35 +53,12 @@ let every = arr3.every(function(value,index,arr){
 },thisValue) // naE
 console.log('every:',every) // every: true
 
-// \* 返回第一个匹配的元素否则返回undefined  但是他可识别NaN 此类的特殊类型
-let find = arr3.find(function(value,index,arr){
-    return typeof value == 'string'
-},thisValue) 
-console.log('find:',find, typeof find) // find: 6 string
-let findIndex = arr3.findIndex(function(value,index,arr){
-    return typeof value == 'string'
-},thisValue)
-console.log('find:',findIndex, typeof find) // find: 1 number
+// boolean 是否包含某个值 arr.includes(valueToFind[, fromIndex]) fromIndex 为负数则从后往前找
+let includes = arr2.includes(4) 
 
-// arr filter 用于筛选出数组中符合条件的所有元素
-let filter = arr3.filter(function(value,index,arr){
-return value > 1 
-},thisValue) // naE
-console.log('filter:',filter) // filter: [ 4, '6' ]
 
-// number / -1  indexOf(item,startIndex:起始位置) 若为负数则从后往前找
-let indexOf = arr1.indexOf(1,0) 
-let lastIndexOf = arr1.lastIndexOf(1,9)
+/* ---修改数组类--- */
 
-// String join(separator:分隔符) 根据分隔符参数将数组转换为字符串
-let join = arr5.join(',')
-console.log('join:',join) // join: 9,10,false,,[object Object]
-
-// arr map 返回新数组，数组中的元素为原始数组元素调用函数处理后的值。
-let map = arr4.map(function(value,index,arr){
-    return value > 1
-},thisValue) // naE 
-console.log('map:',map) // map: [ true, true, false, false ]
 
 // number:数组的长度  从头，从尾添加元素 waC
 let unshift = arr1.unshift(3)
@@ -78,39 +73,28 @@ console.log('pop:',pop,'shift:',shift,'arr:',arr1);
 let reverse = concat.reverse()
 console.log('reverse:',reverse) // reverse: [ true, '6', 4, 3, 2, 1 ]
 
-// arr slice(start,end) 从指定位置截取并返回新数组 前开后闭，从start到end之前 start 可以为负数意为从后向前但end 没有负数
-let slice = arr3.slice(1,3)
-console.log('slice:',slice) // slice: [ '6', true ]
-
-// arr:如果从 arrayObject 中删除了元素，则返回的是含有被删除的元素的数组 splice(start,size:删除元素的个数,itsem) 天幻删除数组 若length为填写则删除后面所有元素
-let splice = arr1.splice(0,1,'1') // waC
-console.log('splice:',splice,'arr1:',arr1) // splice: [ 1 ] arr1: [ '1' ]
 
 // arr：原数组引用 sort(function:排序规则) 按一定规则对数组元素排序，默认排序顺序为按字母升序。 
 let sort = arr2.sort(function(a,b){
-/**
- * 过程解析: a为第一个用于比较的元素，第二参数的后一位arr2[1] ,b为第二个用于比较的元素，第一位arr2[0]
- * 如果计算得来的结果用来确定元素的属顺序 相等则为零 如果大于则按 ASCLL值升序排序/Unicode位点进行排序
- * 如：以上述[2,3,4]做降序为例
- * fucntion compareFn(c){
- *  2-3 = -1
- * 那么 可以确定 要往后移动一位
- * 根据返回值 -1 
- * if(res < 0){
- * arr2.splice(0,1,v)
- * arr.splice(1,1,v)
- * }
- * }
- * 
- */
-// return a - b // 升序
-   return b - a // 降序 
-}) // waC
-console.log('sort:',sort) // sort: [ 4, 3, 2, '' ]
-
-// valueOf() 方法返回 Array 对象的原始值。该原始值由 Array 对象派生的所有对象继承。valueOf() 方法通常由 JavaScript 在后台自动调用，并不显式地出现在代码中。
-let valueOf = arr2.valueOf()
-console.log('valueOf:',valueOf) // valueOf: [ 4, 3, 2, '' 
+    /**
+     * 过程解析: a为第一个用于比较的元素，第二参数的后一位arr2[1] ,b为第二个用于比较的元素，第一位arr2[0]
+     * 如果计算得来的结果用来确定元素的属顺序 相等则为零 如果大于则按 ASCLL值升序排序/Unicode位点进行排序
+     * 如：以上述[2,3,4]做降序为例
+     * fucntion compareFn(c){
+     *  2-3 = -1
+     * 那么 可以确定 要往后移动一位
+     * 根据返回值 -1 
+     * if(res < 0){
+     * arr2.splice(0,1,v)
+     * arr.splice(1,1,v)
+     * }
+     * }
+     * 
+     */
+    // return a - b // 升序
+       return b - a // 降序 
+    }) // waC
+    console.log('sort:',sort) // sort: [ 4, 3, 2, '' ]
 
 // array fill(value,start,end) 像数组中添加固定数据 区间为 length - start/end 所以区间参数可以为负数
 let fill = arr1.fill(1,0,3) //waC 
@@ -120,8 +104,45 @@ console.log('fill:',fill) // fill: [ '1' ]
 let copyWithin = arr1.copyWithin(0) //waC
 console.log('copyWithin:',copyWithin) // copyWithin: [ '1' ]
 
-// boolean 是否包含某个值 arr.includes(valueToFind[, fromIndex]) fromIndex 为负数则从后往前找
-let includes = arr2.includes(4) 
+
+/* --- 筛选类--- */
+
+
+// arr filter 用于筛选出数组中符合条件的所有元素
+let filter = arr3.filter(function(value,index,arr){
+    return value > 1 
+    },thisValue) // naE
+    console.log('filter:',filter) // filter: [ 4, '6' ]
+
+// arr map 返回新数组，数组中的元素为原始数组元素调用函数处理后的值。
+let map = arr4.map(function(value,index,arr){
+    return value > 1
+},thisValue) // naE 
+console.log('map:',map) // map: [ true, true, false, false ]
+
+// arr flat(delpth:number) 按照一个可指定的深度递归遍历数组，并将所有元素与遍历到的子数组中的元素合并为一个新数组返回，并且去空项
+let flat = arr6.flat()
+console.log('flat:',flat) // flat: [ 11, '', null, undefined ]
+
+// arr slice(start,end) 从指定位置截取并返回新数组 前开后闭，从start到end之前 start 可以为负数意为从后向前但end 没有负数
+let slice = arr3.slice(1,3)
+console.log('slice:',slice) // slice: [ '6', true ]
+
+// arr:如果从 arrayObject 中删除了元素，则返回的是含有被删除的元素的数组 splice(start,size:删除元素的个数,itsem) 天幻删除数组 若length为填写则删除后面所有元素
+let splice = arr1.splice(0,1,'1') // waC
+console.log('splice:',splice,'arr1:',arr1) // splice: [ 1 ] arr1: [ '1' ]
+
+
+/* ---转化类 */
+
+
+// String join(separator:分隔符) 根据分隔符参数将数组转换为字符串
+let join = arr5.join(',')
+console.log('join:',join) // join: 9,10,false,,[object Object]
+
+// valueOf() 方法返回 Array 对象的原始值。该原始值由 Array 对象派生的所有对象继承。valueOf() 方法通常由 JavaScript 在后台自动调用，并不显式地出现在代码中。
+let valueOf = arr2.valueOf()
+console.log('valueOf:',valueOf) // valueOf: [ 4, 3, 2, ''] 
 
 // 将数据变为数组对象
 let arrayFrom = Array.from(arrayLike) // 将两类对象转为真正的数组：类似数组的对象（array-like object）和可遍历（iterable）的对象（包括ES6新增的数据结构Set和Map）
@@ -133,9 +154,14 @@ let array  = Array(1)
 let array2 = Array(1,2,3)
 console.log('arrayFrom:',arrayFrom,'arrayOf:',arrayOf,'array:',array,'array2:'); // arrayFrom: [ 'a', 'b', 'c' ] arrayOf: [ 1, 2, 3 ] array: [ <1 empty item> ] array2: [ 1, 2, 3 ]
 
-// arr flat(delpth:number) 按照一个可指定的深度递归遍历数组，并将所有元素与遍历到的子数组中的元素合并为一个新数组返回，并且去空项
-let flat = arr6.flat()
-console.log('flat:',flat) // flat: [ 11, '', null, undefined ]
+// arr.toLocaleString([locales[,options]]); locales 带有BCP 47语言标记的字符串或字符串数组，关于locales参数的形式与解释，请看Intl页面
+// 返回一个字符串表示数组中的元素。数组中的元素将使用各自的 toLocaleString 方法转成字符串，这些字符串将使用一个特定语言环境的字符串（例如一个逗号 ","）隔开。
+let toLocaleString = arr3.toLocaleString()
+console.log('toLocaleString:',toLocaleString)
+
+
+/* ---其他--- */
+
 
 /**
  * accumulator 累计值
@@ -155,12 +181,6 @@ let reduceRight = [[0, 1], [2, 3], [4, 5]].reduceRight(
 console.log('reduceRight:',reduceRight) // reduceRight: [ 4, 5, 2, 3, 0, 1 ]
 let arrT1 = [[0, 1], [2, 3], [4, 5]]
 console.log(arrT1.reduce((a,b)=>a+b),arrT1.reduceRight((a,b)=>a+b)) //0,12,34,5 4,52,30,1
-
-
-// arr.toLocaleString([locales[,options]]); locales 带有BCP 47语言标记的字符串或字符串数组，关于locales参数的形式与解释，请看Intl页面
-// 返回一个字符串表示数组中的元素。数组中的元素将使用各自的 toLocaleString 方法转成字符串，这些字符串将使用一个特定语言环境的字符串（例如一个逗号 ","）隔开。
-let toLocaleString = arr3.toLocaleString()
-console.log('toLocaleString:',toLocaleString)
 
 
 // 都返回 Iterator 对象 因此可以使用l for  of 
@@ -208,5 +228,6 @@ for (const key of arr2.values()){
 // 将字符串转为数组，然后返回字符串的长度。因为它能正确处理各种Unicode字符，可以避免JavaScript将大于\uFFFF的Unicode字符，算作两个字符的bug。
 // 还可以 传入 call  Array.from({ length: 2 }, () => 'jack')     Array.from的第一个参数指定了第二个参数运行的次数。这种特性可以让该方法的用法变得非常灵活。
 
-
+// species 属性返回默认构造函数, 它用于 Array 对象的构造函数 Array:
+console.log(Array[Symbol.species]) // [Function: Array]
 

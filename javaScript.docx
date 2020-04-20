@@ -4,7 +4,7 @@ Array
 检索方法 find,findIndex,indexOf,lastIndexOf
 操作方法 concat,slice,splice,push,unshift,shift,pop,fill,copyWithin
 排序方法 reverse,sort
-遍历方法 filter,map,entries,keys,values,forEach,for...of,flat,flatMap
+遍历方法 filter,map,entries,keys,values,forEach,for...of,flat,flatMap,reduce,reduceRight
 转换方法 Array.form,Array.of,Array(),toLocalString,toString,toSource,join,valueOf
 判定方法 isArray,some,every,includes
 copyWithin(target,start,end): 将指定位置的元素复制到其他位置
@@ -34,14 +34,62 @@ findIndex
 indexOf
 lastIndexOf
 是否存在元素 返回 number
-却别在于find/findIndex能检测 NaN 等特殊类型
+却别在于find/findIndex能检测 NaN 等特殊类型 
 
 // 跃过空性
+ES6 明确规定会将数组空位转为undefined
+forEach filter some every 会跃过空位
+map 会跃过空位但是保留空位
+join和 toString 会将空位视为undefined，而undefined、null处理为空字符串
+Array()、copyWithin、for...of 会保留空位
 
 // 数组深浅拷贝
+concat() slice() 理论上凡是不会改变原数组的都可以做为深拷贝一个数组
+
+String
+常用方法
+检索类: indexOf,lastIndexOf,search,match
+提取类：charAt,charCodeAt,slice,substr,substring
+操作类：replace,concat,trim
+转化类：split,String.fromCharCode,toLowerCase,toUpperCase,valueOf,toSource
+html包装类：anchor:瞄,link,fontSize,fontColor,sub:下标,pub:上标,
+
+RegExp
+基本知识
+修饰符/模式：i,g,m
+元组/范围：[] () |
+元字符/转义 .,\w/W,\d/D,\s/S,\b/B,\O,\n,\r,\f,\t,\v,\xxx,\xdd,\uxxxx
+量词：+,?,*,n{},?=n,?n,^,$
+常用方法
+Bool regexppbjt.test(str)
+Array/null regexppbjt.exec(str)
+RegExp regexpobj.complie(str,str)
+
+number
+常用方法
+指数相关：toExponential
+小数相关：toFixed,toPrecision
+
+全局属性
+infinity,NaN,undefined
+全局方法
+uri相关：encodeURI,decodeURI,encodeURIComponent,decodeURIComponent
+字符编码：escape,unescape,eval
+类型转换：Number,String,parseInt,parseFloat
+判断：isFinite,isNaN
 
 
 
+
+
+
+
+
+
+
+在js中
+所有按照元素所在位置的提取方法都是取前闭后开区间的参数值 [start,end)
+所有类型的数据都有 toSource,toString,valueOf
 
 this
 1，默认当前window 全局环境 2，当前window 3，函数独立调用/函数作为方法调用/内置或回调函数用调用则指向当前window 4，闭包(return xxx;)中this默认指向当前windows
