@@ -19,3 +19,7 @@ const a = {
 }
 const b = new a.fav(); // fav {}+
 console.log(b);
+
+
+
+

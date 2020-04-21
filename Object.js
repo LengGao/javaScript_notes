@@ -1,4 +1,5 @@
 let arr = [1, , null, undefined, '']
+let g = Symbol('g')
 let obj = {
   a: 1,
   'b': null,
@@ -12,7 +13,7 @@ let obj = {
   },
   get h () { return 'h' },
   set h (x) { x = 'h' },
-  [Symbol.g]: 'g'
+  [g]: 'g'
 }
 // console.log('obj:', obj);
 // console.log('arr:', ...arr); // 1 undefined null undefined
@@ -24,14 +25,16 @@ console.log('getAnbdSet:', getAndset.get(), obj.h); // getAnbdSet: h  h
  * 对象属性的对象
  *  Descript 描述性对象
  * 描述性对象的内容
-* enumerable 可枚举属性 例如：for...in,Object.keys(),JSON.stringify,Object.assign都会忽略 enumerable=false的属性
+ * enumerable 可枚举属性 例如：for...in,Object.Keys(),JSON.stringify,Object.assign都会忽略 enumerable=false的属性
+ * configurable 可配置的 只要实可配置的就可以 配置属性的描述性对象 Object.dineProperty(obj,propertyNmae,option:配置对象)
+ * writable 可写入 买哦书对象是否可以修改属性值
  */
 
 /**
  * 常用遍历对象方法
  * 以下方法都遵循 数值键（升序）-> 字符键（加入顺序）-> Symbol键（加入顺序） 的顺序遍历
- * 
  */
+
 // for...in 便利自身可枚举和继承的可枚举属性，不含Symbol
 for (const key in obj) {
   if (obj.hasOwnProperty(key)) {
@@ -39,6 +42,7 @@ for (const key in obj) {
     console.log('forin:', element);
   }
 }
+
 // array Object.keys() 返回滋生所有可枚举enumberable=true的属性的键名，不含Symbol
 let keys = Object.keys(obj)
 console.log('keys:', keys);
@@ -49,7 +53,18 @@ console.log('getOwnPropertyName:', getOwnPropertyNames);
 
 // array getWnPropertySymbols 返回自身所有Symbol属性简明
 let getOwnPropertySymbols = Object.getOwnPropertySymbols(obj)
-console.log('getOwnPropertySymbols:', getOwnPropertySymbols);
+console.log('getOwnPropertySymbols:', getOwnPropertySymbols); // []
+
+// 定义一个或多个新得或者修改现有的属性的描述性对象 并返回该对象 此时为浅拷贝
+let defineProperty = Object.defineProperty(obj, 'j', {
+  value: 'j',
+  writable: true,
+  enumerable: true,
+  configurable: true
+})
+let defineProperties = Object.defineProperties(obj, { k: { value: 'k', writable: true, enumerable: true, confingurable: true } })
+console.log('definedProperty:', defineProperty, 'defineProperties:', defineProperties);
+
 
 // array Reflect.ownKeys 返回自身所有属性键名
 let ownKeys = Reflect.ownKeys(obj)
@@ -59,6 +74,10 @@ console.log('ownKeys:', ownKeys);
 let getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor(obj, 'a')
 let getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors(obj)
 console.log('getOwnPropertyDescriptor:', getOwnPropertyDescriptor, 'getOwnPropertyDescriptors:', getOwnPropertyDescriptors);
+
+//  hasOwnProperty 判断是否有可枚举属性
+let hasOwnProperty = obj.hasOwnProperty
+console.log('hasOwnProperty:', hasOwnProperty); // [Function: hasOwnProperty]
 
 // == 自动转换数据类型  === NaN 不等于自身以及 +0 等于 -0  
 // Object.is  采用同值相等算法 解决了上面两个问题，bool Object.is(anyValue,anyValue)
@@ -91,8 +110,6 @@ Object.assign(Ponit.prototype, {
 // Object.fromEntries  用于将一个键值对数组转为对象
 let fromEntries = Object.fromEntries([['A', 1], ['B', 2]])
 console.log('fromEntries:', fromEntries); // { A: 1, B: 2 }
-
-
 
 
 

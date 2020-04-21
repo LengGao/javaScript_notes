@@ -1,4 +1,5 @@
 
+
 Array
 常用方法
 检索方法 find,findIndex,indexOf,lastIndexOf
@@ -46,6 +47,7 @@ Array()、copyWithin、for...of 会保留空位
 // 数组深浅拷贝
 concat() slice() 理论上凡是不会改变原数组的都可以做为深拷贝一个数组
 
+
 String
 常用方法
 检索类: indexOf,lastIndexOf,search,match
@@ -53,6 +55,7 @@ String
 操作类：replace,concat,trim
 转化类：split,String.fromCharCode,toLowerCase,toUpperCase,valueOf,toSource
 html包装类：anchor:瞄,link,fontSize,fontColor,sub:下标,pub:上标,
+
 
 RegExp
 基本知识
@@ -65,10 +68,35 @@ Bool regexppbjt.test(str)
 Array/null regexppbjt.exec(str)
 RegExp regexpobj.complie(str,str)
 
-number
+
+Number
 常用方法
 指数相关：toExponential
 小数相关：toFixed,toPrecision
+
+
+Object
+属性的描述性对象
+可枚举：enumerable 描述属性是否可以枚举 for...of,Object.Keys,JSON.stringify,Object.assign
+可写入：writable 描述属性的值是否可以修改
+可配置：configurable 描述该属性是否可以配置它的描述性对象
+
+常用方法
+与enumerable有关：for...of,Object.Keys,JSON.stringify,Object.assign,hasOwnProperty
+与Descriptor相关：getOwnPropertyDescriptor(含Symbol),getOwnPropertyDescriptors(含Symbol),getOwnPropertyNames(不含Symbol),getOwnPropertySymbols(只含Symbol),Reflect.ownKeys,defineProperty,defineProperties
+操作类：Object.assign,Object.is,
+
+
+SetAndMap
+蝉蛹属性
+constructor,size
+宠用方法
+set：add,delete,has,clear
+map：set,get,delete,has
+转换：new Map/Set([[x,y],[w,z]]),转成其他类型最好用[....mapObj/setObj]转换成数组后再转换为其他类型
+子集
+weakSet/weakMap   他们的成员或键名只能是对象，采用弱引用的方式
+
 
 全局属性
 infinity,NaN,undefined
