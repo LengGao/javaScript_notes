@@ -46,21 +46,5 @@ let m4 = function strMapToObj (object) {
   }
   return obj
 }
-// 转JOSN  如果键名都为字符串则可以直接JSON.stringify 否则先转数组在转JSON [...m1]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 转JOSN  如果键名都为字符串则可以直接JSON.stringify 否则先转数组在转JSON [...m1]'s'.search
 

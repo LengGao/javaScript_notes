@@ -7,7 +7,7 @@ Array
 排序方法 reverse,sort
 遍历方法 filter,map,entries,keys,values,forEach,for...of,flat,flatMap,reduce,reduceRight
 转换方法 Array.form,Array.of,Array(),toLocalString,toString,toSource,join,valueOf
-判定方法 isArray,some,every,includes
+判定方法 Array.isArray,some,every,includes
 copyWithin(target,start,end): 将指定位置的元素复制到其他位置
 flat(delpth): 按照一个可指定深度递归数组，并得到新数组
 flatMap(function callback(currentValue[, index[, array]]) {}[, thisValue]: 与 map 连着深度值为1的 flat 几乎相同
@@ -52,7 +52,7 @@ String
 常用方法
 检索类: indexOf,lastIndexOf,search,match
 提取类：charAt,charCodeAt,slice,substr,substring
-操作类：replace,concat,trim
+操作类：replace(regexp/'str','str'),concat,trim
 转化类：split,String.fromCharCode,toLowerCase,toUpperCase,valueOf,toSource
 html包装类：anchor:瞄,link,fontSize,fontColor,sub:下标,pub:上标,
 
