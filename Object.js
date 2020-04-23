@@ -135,8 +135,6 @@ console.log('fromEntries:', fromEntries); // { A: 1, B: 2 }
 
 
 
-
-
 /** ES2020
  * 链判断运算符  ?.  解决对象属性null或undefined的问题以及解决是否存在的属性判断,如 number?.length 依然会报错
  * 用饭

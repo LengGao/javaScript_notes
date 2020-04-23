@@ -98,6 +98,11 @@ map：set,get,delete,has
 weakSet/weakMap   他们的成员或键名只能是对象，采用弱引用的方式
 
 
+Symbol
+常用方法
+let sym = Symbol() , Symbol.for() , Symbol.keyFor()
+
+
 全局属性
 infinity,NaN,undefined
 全局方法
@@ -107,11 +112,68 @@ uri相关：encodeURI,decodeURI,encodeURIComponent,decodeURIComponent
 判断：isFinite,isNaN
 
 
+Generator
+部署Iterator接口：
+function* g(obj) {
+  let keys = Object.key(obj)
+  for(let i=0;i<keys.length;i++;)
+    const key = keys[i]
+    yield [key,obj[key]]
+}
+let p_obj
+for(let [key,val] of g (p_obj)) 
+思路总结：将对象转换为本身就具有iterator的数据类型，然后yield吹数据类型的元素，利用for...of 自动遍历Iterator对象的特性将yield 产出值一一取出
 
+使用第一次调用next(x)的参数 
+function* g(f) {
+  return function () {
+    let obj = f()
+    obj.next()
+    return obj
+  }
+}
+f(function* x(){ let a = yield }).next(value)
+思路总结：给目标generator函数披上一件generator外衣，在外衣中执行一次next()，即执行第一次next,此后再由外部传入参数
 
+将对象封装成generator/创建Generator实例：
+// 执行的是遍历器对象f，但是生成的对象实例是ob
+function* g() {
+  this.a = 1
+  yield this.b = 2 
+}
+let obj = {}; g.call(obj); // obj 此时为Generator实例
+// 执行的是遍历器对象f，但是生成的对象实例是obj 的统一,让所有对象都有能力成为Generator实例,也就是可以new 
+function c() {
+    return g.call(g.prototype)
+}
+class c {
+  constructor () {
+    return c
+  }
+}
+let proto = new c(); proto.next();proto.a proto.b// 1,undefined; proto.next(); proto.b // 2
+思路总结：利用call 函数修改函数时的嗲用对象传入原型链
 
+状态机：
+function* g() {
+  whlie(trim){
+    yield 1
+    yield 2
+  }
+}
+let obj = g();obj.next();obj.next()
 
-
+异步编程的同步表达：
+function* g() {
+  yield f1()
+  yield* g2()
+}
+function g2() {
+  yield f2()
+  yield f3()
+}
+let obj = g1();obj.next()
+思路总结：利用yield和next的暂停和执行语法，将要同步的部分 现在yield后面, 需要时next出来
 
 
 

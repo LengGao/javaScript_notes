@@ -1,12 +1,12 @@
 /**
  * Symbol 转换为Symbol不登记
- * Symbol.for 转换为Symbol并等级
- * Symbol.keyFor 引用一个等级了的Symbol
+ * Symbol.for 转换为Symbol并登记
+ * Symbol.keyFor 引用一个登记了的Symbol
  */
 
 // String.prototype.match(regexp)
 // 等同于
-// regexp[Symbol.match](this)
+// string[Symbol.match](this)
 
 let hi = Symbol()
 let MyClass = {
