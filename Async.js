@@ -1,111 +1,4 @@
 var fs = require('fs')
-// /**
-//  * 求职测虐
-//  * x=1;
-//  * call by value：f(x+5) -> f(5)
-//  * call by name：f(x+5) 在使用时求值  (x+5) * 2
-//  * 求值简单但是可能造成性能对丢失
-//  */
-// /**
-//  * Thunk 函数
-//  * 编译器的"传名调用"实现，往往是将参数放到一个临时函数之中，再将这个临时函数传入函数体。这个临时函数就叫做Thunk函数。
-//  */
-
-// var n = 1
-// function f (x) {
-//   return x + 5
-// }
-// f(n + 1)
-// // 编译 等同于、
-// var thunk = function () {
-//   return n + 1
-// }
-
-// function f_t (thunk) {
-//   return thunk() + 5
-// }
-// // JavaScript语言是传值调用，它的Thunk函数含义有所不同。在JavaScript语言中，Thunk函数替换的不是表达式，而是多参数函数，将其替换成单参数的版本，且只接受回调函数作为参数
-
-// var Thunk = function (fn) {
-//   return function (...args) {
-//     console.log('this_call', ...args);
-//     return function (callback) {
-//       console.log('this_call', this);
-//       return fn.call(this, ...args, callback);
-//     }
-//   };
-// };
-// Thunk(1, function () {
-//   console.log('this', this);
-// })
-
-// async function a_f () {
-//   await console.log('1'); // await 等同于同步操作
-//   await f2()
-//   // 只要一个await语句后面的Promise变为reject，那么整个async函数都会中断执行。
-//   // 为了避免这个问题，可以将第一个await放在try...catch结构里面，这样第二个await就会执行。
-//   await 3
-//   return 'a_f'
-// }
-// let f2 = function () {
-//   console.log('2');
-// }
-// a_f().then(x => console.log(x)) // undefined
-// console.log(a_f()); // a_f
-
-// async function a_f2 () {
-//   try {
-//     await f3()
-//     await f4()
-//     await f5()
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
-// function f3 () {
-//   console.log('f3');
-// }
-// function f4 () {
-//   throw new Error('后面的await会中断吗？')
-// }
-// function f5 () {
-//   console.log('f5');
-// }
-// a_f2()  // 答案是会中断  如果await后面的异步操作出错，那么等同于async函数返回的Promise对象被reject
-
-// // async 函数的实现  async 函数的实现，就是将 Generator 函数和自动执行器，包装在一个函数里
-// function f3 (params) {
-//   return spavn(function* () { })
-// }
-// // 自动执行器
-// function spavn (genf) {
-//   return new Promise(function (resolve, reject) {
-//     let gen = genf()
-//     function step (nextF) {
-//       let next = undefined;
-//       try {
-//         next = nextF()
-//       } catch (error) {
-//         return reject(error)
-//       }
-//       if (next.done) {
-//         return resolve(next.value)
-//       }
-//       Promise.resolve(next.value).then(function (v) {
-//         step(function () {
-//           return gen.next(v)
-//         })
-//       }, function (e) {
-//         step(function () {
-//           return gen.throw(e)
-//         })
-//       })
-//     }
-//     step(function () {
-//       return gen.next(undefined) // 传值
-//     })
-//   })
-// }
 
 // // then添加的回调函数会在所有 await 之后执行
 // async function a_f3 (name) {
@@ -206,7 +99,7 @@ let transformation_thunk = function (func) {
     console.log('transformation_thunk_arguments:', arguments); //{ '0': 'README.md' }
     let args = Array.prototype.slice.call(arguments)
     return function (callback) {
-      console.log('transformation_this:', this); // Object [global]
+      console.log('transformation_this:', this); // Object [global] 当被调用时this值被绑定在直接调用对象或者当前对象上
       args.push(callback)
       return func.apply(this, args)
     }
@@ -215,7 +108,78 @@ let transformation_thunk = function (func) {
 let transformation_thunk_express = transformation_thunk(fs.readFile)
 let transformation_thunk_express_file = transformation_thunk_express(file)
 transformation_thunk_express_file(callback)
-// 总结: 这样的转换器大多数式返回一个表达式,尤其是函数的表达式,它式需要经过求值的,并不是直接返回结果,所以容易混淆
+// 总结: 这样的转换器大多数式返回一个表达式,尤其是函数的表达式,它是需要经过求值的,并不是直接返回结果,所以容易混淆
+
+// generator自动执行机
+// 简单版
+function* gen_easy () {
+  yield 1
+  yield 2
+  return 3
+}
+let obj_gen_easy = gen_easy()
+let res_obj_gen_easy = obj_gen_easy.next()
+while (!res_obj_gen_easy.done) {
+  console.log('res_obj_gen_easy:', res_obj_gen_easy.value);
+  res_obj_gen_easy = obj_gen_easy.next()
+}
+// 上述操作并不适用于异步操作，为了保证前一步执行完才能执行后一步我们需使用下面异步generator自动执行机
+// 基于Thunk,
+let async_thunk = transformation_thunk(fs.readFile)
+function* g_thunk () {
+  var a = yield async_thunk('/README.md')
+  var b = yield async_thunk('/README.md')
+}
+function run_thunk (fn) {
+  let gen = fn()
+  function next (arr, data) {
+    let result = gen.next(data)
+    if (result.done) return;
+    console.log('result.value:', result)
+    result.value(next) // 由于yield 产出的时一个方法所以value值织染也时一个Funtion
+  }
+  next()
+}
+run_thunk(g_thunk)
+// 基于Promise
+// async 函数的实现--将Generator函数自动执行器包装在一个函数里
+// async funciton xx (xx) {} 等价于
+function async_equali_gen (args) {
+  // args === Genertor
+  return spawn(args);
+}
+function spawn (gen_func) {
+  return new Promise((resolve, reject) => {
+    var gen = gen_func()
+    function step (next_func) {
+      try { var next = next_func() } catch (e) { reject(e) } //错误处理
+      if (next.done) return resolve(next.value); // 结束处理
+      Promise.resolve(next.value).then((v) => {
+        step(() => { return gen.next(v); });
+      }, (e) => {
+        step(() => { return gen.throw(e); });
+      });
+      // Promise.resolve(next.value).then(function (v) { step(() => { return gen.next(v) }) }).catch(function (e) { step(() => { return gen.throw(e) }) })// done == false 递归调用
+    }
+    step(() => { return gen.next() }) // 启动
+  })
+}
+async_equali_gen(function* () {
+  yield console.log('1');
+  yield console.log('2');
+  return console.log('3');
+})
+// async 
+async function async_complie (params) {
+  var b = await 1 + 2;
+  var a = await 2 + 2 + b;
+  // 假设以上是异步操作那么他也会变为同步操作
+  console.log(a, b);
+}
+async_complie()
+
+
+
 
 
 
