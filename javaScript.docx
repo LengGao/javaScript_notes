@@ -175,6 +175,23 @@ function g2() {
 let obj = g1();obj.next()
 思路总结：利用yield和next的暂停和执行语法，将要同步的部分 现在yield后面, 需要时next出来
 
+Prmoise
+常用方法 Promise.try,Promise.race,Promise.all,Promise.resolve,Promise.reject
+done 方法部署
+Promise.prototype.done = function (onFulfilled,onReject) {
+  return this.then(onFulfilled,onReject).catch(e=>{ throw e})
+}
+finally方法部署
+Promise.prototype.finally = function(callback){
+  let that = this.constructor
+  return that.then(
+    v => { P.resolve(callback()).then(()=> return v) },
+    e => { P.reject(callback()).catch(e=>
+    throw e) }
+  )
+}
+
+
 
 
 在js中
