@@ -11,7 +11,7 @@ Array
 copyWithin(target,start,end): 将指定位置的元素复制到其他位置
 flat(delpth): 按照一个可指定深度递归数组，并得到新数组
 flatMap(function callback(currentValue[, index[, array]]) {}[, thisValue]: 与 map 连着深度值为1的 flat 几乎相同
-会改变原数组的操作方法：
+会改变原数组的操作方法：  
 特征：
 1，会改变数组的长度或元素
 2，会对元素排序
@@ -30,7 +30,7 @@ includes: 判断数组中是否有莫元素,
 区别在于 includes 能够检测 NaN 等特殊类型
 isArray: 是否是Array对象
 建所方法：
-find: 是否存在某元素，返回*
+find: 是否存在某元素，返回any
 findIndex 
 indexOf
 lastIndexOf
@@ -151,6 +151,7 @@ class c {
     return c
   }
 }
+
 let proto = new c(); proto.next();proto.a proto.b// 1,undefined; proto.next(); proto.b // 2
 思路总结：利用call 函数修改函数时的嗲用对象传入原型链
 

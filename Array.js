@@ -10,7 +10,8 @@ let arrayLike = {
   '0': 'a',
   '1': 'b',
   '2': 'c',
-  length: 3
+  '3': { a: '1' },
+  length: 5
 }
 /* 
 'thisValue:','执行 callback时使用的this值',不填默认为undefined
@@ -98,12 +99,16 @@ let sort = arr2.sort(function (a, b) {
 console.log('sort:', sort) // sort: [ 4, 3, 2, '' ]
 
 // array fill(value,start,end) 像数组中添加固定数据 区间为 length - start/end 所以区间参数可以为负数
-let fill = arr1.fill(1, 0, 3) //waC 
+let fill = arr1.fill(2, 0, 3) //waC 
 console.log('fill:', fill) // fill: [ '1' ]
 
-// array copyWithin(target：开始的位置,start:,end) 将指定位置的元素复制到其他位置
+// array copyWithin(target：开始的位置,start:,end) 将指定位置的元素复制到其他位置 空值会被混略拷贝
 let copyWithin = arr1.copyWithin(0) //waC
 console.log('copyWithin:', copyWithin) // copyWithin: [ '1' ]
+let copyWithIn2 = arr2.copyWithin(2, 1, 3);
+console.log('copyWithIn2:', copyWithIn2);
+var arr_temp = ['a', 'b', 'c', 'd', 'e'];
+console.log('arr_temp.copyWithin(4, 3, 4):', arr_temp.copyWithin(4, 3, 4)); // [ 'a', 'b', 'c', 'd', 'd' ]
 
 
 /* --- 筛选类--- */
@@ -124,6 +129,8 @@ console.log('map:', map) // map: [ true, true, false, false ]
 // arr flat(delpth:number) 按照一个可指定的深度递归遍历数组，并将所有元素与遍历到的子数组中的元素合并为一个新数组返回，并且去空项
 let flat = arr6.flat()
 console.log('flat:', flat) // flat: [ 11, '', null, undefined ]
+let arr_temp3 = [1, [2, 3], [4, [5, 6]]]
+console.log("flat", arr_temp3.flat(1), arr_temp3.flat(2)) // flat [ 1, 2, 3, 4, [ 5, 6 ] ] [ 1, 2, 3, 4, 5, 6 ]
 
 // arr slice(start,end) 从指定位置截取并返回新数组 前开后闭，从start到end之前 start 可以为负数意为从后向前但end 没有负数
 let slice = arr3.slice(1, 3)
@@ -132,7 +139,9 @@ console.log('slice:', slice) // slice: [ '6', true ]
 // arr:如果从 arrayObject 中删除了元素，则返回的是含有被删除的元素的数组 splice(start,size:删除元素的个数,itsem) 天幻删除数组 若length为填写则删除后面所有元素
 let splice = arr1.splice(0, 1, '1') // waC
 console.log('splice:', splice, 'arr1:', arr1) // splice: [ 1 ] arr1: [ '1' ]
-
+let arr_temp2 = ['a', 'b', 'c']
+let splice2 = arr_temp2.splice(0, 1, 'a', 'b')
+console.log('splice2:', splice2, arr_temp2);
 
 /* ---转化类 */
 
@@ -151,9 +160,13 @@ let arrayFrom = Array.from(arrayLike) // 将两类对象转为真正的数组：
 // var arr = [].slice.call(arrayLike); // ['a', 'b', 'c']
 let arrayOf = Array.of(1, 2, 3) // 将一组值变为数组
 // 将数据转换为数组
-let array = Array(1)
+let array = Array(3, 2, 3)
 let array2 = Array(1, 2, 3)
 console.log('arrayFrom:', arrayFrom, 'arrayOf:', arrayOf, 'array:', array, 'array2:'); // arrayFrom: [ 'a', 'b', 'c' ] arrayOf: [ 1, 2, 3 ] array: [ <1 empty item> ] array2: [ 1, 2, 3 ]
+arrayLike['3'].a = 2
+let array_string = 'abc'
+Array.from(array_string) // 返回得到的只是一份浅拷贝 数组 
+console.log('arrayLike:', arrayFrom, 'array_string:', array_string); //arrayLike: [ 'a', 'b', 'c', { a: 2 }, undefined ]
 
 // arr.toLocaleString([locales[,options]]); locales 带有BCP 47语言标记的字符串或字符串数组，关于locales参数的形式与解释，请看Intl页面
 // 返回一个字符串表示数组中的元素。数组中的元素将使用各自的 toLocaleString 方法转成字符串，这些字符串将使用一个特定语言环境的字符串（例如一个逗号 ","）隔开。
@@ -182,6 +195,17 @@ let reduceRight = [[0, 1], [2, 3], [4, 5]].reduceRight(
 console.log('reduceRight:', reduceRight) // reduceRight: [ 4, 5, 2, 3, 0, 1 ]
 let arrT1 = [[0, 1], [2, 3], [4, 5]]
 console.log(arrT1.reduce((a, b) => a + b), arrT1.reduceRight((a, b) => a + b)) //0,12,34,5 4,52,30,1
+let arr_temp4 = [1, [2, 3, [4, 5]], [6, 7, [8, 8]], [[10]]]
+let deepthReduce = arr_temp4.reduce((a, c) => {
+  console.log('a+c:', a + c, 'a:', a, 'c:', c);
+  /**
+   * a+c: 12,3,4,5 a: 1 c: [ 2, 3, [ 4, 5 ] ]
+    a+c: 12,3,4,56,7,8,8 a: 12,3,4,5 c: [ 6, 7, [ 8, 8 ] ]
+    a+c: 12,3,4,56,7,8,810 a: 12,3,4,56,7,8,8 c: [ [ 10 ] ]
+   */
+  return a + c
+})
+console.log('deepth Reduce：', deepthReduce, typeof deepthReduce); // 12,3,4,56,7,8,810 string
 
 
 // 都返回 Iterator 对象 因此可以使用l for  of 
