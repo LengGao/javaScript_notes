@@ -111,28 +111,44 @@ Object.assign(Ponit.prototype, {
 let fromEntries = Object.fromEntries([['A', 1], ['B', 2]])
 console.log('fromEntries:', fromEntries); // { A: 1, B: 2 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Object.create(protoObj[,propertiesObject])  //往往用于类的继承
+let super_obj = { name: 'zs' }
+let subo_obj = Object.create(super_obj) // 继承其他对象包括原型链__proto__并放入__proto__
+// subo_obj.name // zs
+subo_obj.name = 'zsf'
+// subo_obj.name // zsf、
+let freeze_obj = Object.freeze({})
+freeze_obj, name = 'ku'
+console.log("freeze:", freeze_obj);
+let entries_obj = Object.entries({ a: 'a', b: 'b' })
+for (const [k, v] of entries_obj) {
+  console.log('extries:', 'k', k, 'v', v)
+  console.log('extries:', entries_obj, typeof entries_obj, entries_obj.__proto__)
+}
+let test_map = [['a', 'a', 'b', 'b'], ['d', 'd', 'e', 'e']]
+for (const item of test_map) {
+  console.log('extries:', item)
+  // console.log('extries:', 'k', k, 'v', v)
+  console.log('extries:', test_map, typeof test_map, test_map.__proto__)
+}
+let extendable_obj = {}
+console.log(Object.isExtensible) // 属性是否可以扩展  是否可以在它上面添加新的属性
+Object.preventExtensions(extendable_obj) //不可扩展
+console.log(Object.isExtensible) // false
+let sealed_obj = {}
+console.log(Object.isSealed(sealed_obj)) // 对象是否是密封的 （不可以添加新属性）
+Object.seal(sealed_obj)
+console.log(sealed_obj) // false
+  /**
+   * seal  freeze  preventExtensions 区别
+   * preventExtensions之后只是不允许添加新属性, 原有属性可修改可删除；
+  seal之后不允许添加新属性， 不允许删除原有属性， 是否可修改由原属性的配置决定；
+  freeze之后不允许添加新属性， 不允许删除原有属性, 不允许修改值以及属性描述符；
+   */
+  ;
+var Ponit_subo = new Ponit()
+console.log("Ponit:", Ponit.isPrototypeOf(Ponit_subo), Ponit_subo) // false
+console.log('subo_obj', super_obj.isPrototypeOf(subo_obj)) // true
 
 
 /** ES2020
@@ -150,4 +166,33 @@ console.log('fromEntries:', fromEntries); // { A: 1, B: 2 }
 //   console.log('no');
 // }
 
+let ownKesys = new Array(1, 2, 3, 4);
+console.log('ownKesys', ownKesys, Reflect.ownKeys(ownKesys))
+let symbols = Symbol('a')
+console.log('symbols', symbols, typeof symbols)
+let symbols_obj = {}
+symbols_obj = Object.defineProperty(symbols_obj, 'a', {
+  configurable: false,
+  // writable: false,
+  enumerable: false,
+  set function (value) {
+    this.value = value
+  },
+  get function () {
+    return '1'
+  }
+})
+console.log("symbols_obj", symbols_obj, symbols_obj['a'], typeof symbols_obj['a'])
 
+let firstName = Symbol();
+let person = {};
+person[firstName] = "song"
+console.log(person, person[firstName], typeof person[firstName]);
+// var getOwnPropertyDescriptorsperson_obj2 = Object.getOwnPropertyDescriptorsperson(person);
+// console.log(Object.getOwnPropertyDescriptors());
+
+const o1 = { a: 1 };
+const o2 = { [Symbol('foo')]: 2 };
+const obj_21 = Object.assign({}, o2);
+console.log(obj_21); // { a : 1, [Symbol("foo")]: 2 } (cf. bug 1207182 on Firefox)
+Object.getOwnPropertySymbols(obj_21); // [Symbol(foo)]

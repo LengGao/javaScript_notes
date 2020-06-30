@@ -62,7 +62,7 @@ RegExp
 修饰符/模式：i,g,m
 元组/范围：[] () |
 元字符/转义 .,\w/W,\d/D,\s/S,\b/B,\O,\n,\r,\f,\t,\v,\xxx,\xdd,\uxxxx
-量词：+,?,*,n{},?=n,?n,^,$
+量词：+,?,*,n{},?=n,?n,^,$  
 常用方法
 Bool regexppbjt.test(str)
 Array/null regexppbjt.exec(str)
@@ -203,3 +203,6 @@ this
 1，默认当前window 全局环境 2，当前window 3，函数独立调用/函数作为方法调用/内置或回调函数用调用则指向当前window 4，闭包(return xxx;)中this默认指向当前windows
 当函数被赋值给一个变量则this指向当前window  var a = {f:function(){}};var b= a.f;b.f();f中this指向当前window。隐式绑定
 此外谁直接调用函数this指向谁 obj.obj2.f(); this => obj2
+
+
+/// 运算符优先级 http://caibaojian.com/es6/symbol.html
