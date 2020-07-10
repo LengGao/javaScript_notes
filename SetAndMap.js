@@ -17,34 +17,66 @@ console.log('set_clear:', set_clear, 's1:', s1); // set_clear: undefined s1: Set
  * values()
  * entries()
  * forEach()
+ * for...of
  */
+
+
+// Set 
+let set_1 = new Set();
+set_1.add(1); // Boolean
+set_1.add(2);
+set_1.add(3);
+set_1.forEach((value, key, set) => {
+  console.log('forEact', value, key, set)
+})
+set_1.delete(1); // Boolean
+set_1.has(2);// Boolean
+console.log(set_1.clear()); // 没有返回值void // undefined
+let set_2 = new Set([1, 2, 3, 4])
+console.log('set_2', set_2, set_2.size); //Set { 1, 2, 3, 4 } 4
+// Map  同Set
+let map_1 = new Map()
+map_1.set(1, 2)
+console.log(map_1.get(1), map_1.has(2), map_1.has(1)) // 2 false true
+// 数组与Set Map 转换
+let arr_set_map = [...map_1]
+let set_map_arr = new Map([['1', 4], ['2', 5]])
+console.log(arr_set_map, set_map_arr, arr_set_map.flat())
+// map 转换为对象
+function strMapToObj (strMap) {
+  let object = Object.create(null)
+  for (const [k, v] of strMap) {
+    object[k] = v;
+  }
+  return object;
+}
 
 /**
- * WeakSet
- * 成员只能是对象 而且是弱引用。无法引用weakSet的成员，所以不可以遍历
- * 同时 WeakSet还是一个钩爪函数，这以为这她可以吧其他对象嘴啊换成WeakSet
+ * WeakSet WeakMap
+ * 这个数据结构也是不重复集合，但Weak成员只能时对象，其中的对象都时弱引用，也就是说垃圾回收机制不考虑Weak对该对象的引用，即若其他对象都不引用该对象，那么拉季会说机制会自动回收该对象占用的内容，不开率它是否还在Weak中，所以呢Weak中的成员无法引用，也不可以遍历
+ * 那么它的用处时什么呢？
+ * 答案是做临时储存，例如，DOM节点，不会出现内存泄漏
+ * WeakMap 与 WeakSet 的却在于 WeakMap除了用对象做键名 还可以接受Null,键名所指向的对象,不计入垃圾回收机制
  */
-let ws = new WeakSet()
-ws.add({})
-console.log('ws:', ws); // WeakSet { <items unknown> }
-let ws2 = new WeakSet([[1, 2], [3, 4]])
-console.log('ws2:', ws2); // WeakSet { <items unknown> }
-m1.set({ 'a': 1 }, 'map')
-m1.set(1, '1')
-console.log('m1:', m1.get(1), m1); // 1 Map { {} => 'map', 1 => '1' }
-// 重复set后盖前 ，并且只有同一个对象的引用，Map才会是为同一个值
-m1.set(1, '2')
-console.log('m1:', m1.get(1), 'm1:', m1.get({ 'a': 1 })); // m1: 2 m1: undefined
-
-// 类型转换
-let m2 = [...m1]
-let m3 = new Map([[1, 2], [3, 4]])
-let m4 = function strMapToObj (object) {
-  let obj = Object.create(null)
-  for (const [key, value] of object) {
-    obj[key] = value
+// WeakMap另一用处就是 部署私有属性
+let _couter = new WeakMap()
+let _action = new WeakMap()
+class Countdown {
+  constructor(couter, action) {
+    _couter.set(this, couter)
+    _action.set(this, action)
   }
-  return obj
+  dec () {
+    let couter = _couter.get(this)
+    if (couter < 1) return
+    couter--;
+    _couter.set(this, couter)
+    if (couter === 0) {
+      _action.get(this)();
+    }
+  }
 }
-// 转JOSN  如果键名都为字符串则可以直接JSON.stringify 否则先转数组在转JSON [...m1]'s'.search
+let countdown = new Countdown(2, () => { console.log('DONE') })
+countdown.dec()
+countdown.dec()
 

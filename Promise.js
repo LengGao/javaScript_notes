@@ -19,7 +19,7 @@ var request_simulation = function (url) {
 // catch不同于trycatch/then(null,reject) 它具有冒泡性质，前面任何一个抛出的错误，都胡最后一个catch到，而trycatch没有再catch执行错误处理那么错误不会传递到外层代码，即不会有任何反应
 var promise = new Promise(function (resolve, reject) {
   resolve("ok");
-  setTimeout(function () { throw new Error('test') }, 0)
+  // setTimeout(function () { throw new Error('test') }, 0)
 });
 promise.then(function (value) { console.log(value) });
 process.on('unhandledRejection', (err, p) => {
@@ -108,6 +108,70 @@ Promise.prototype.finally = function (callback) {
 // var p_f = console.log('now');
 // Promise.try(p_f)
 // console.log('next');
+
+// 部署done
+Promise.prototype.done = function (onFulfilled, onReject) {
+  this.then(onFulfilled, onReject).catch(err => {
+    throw err
+  })
+}
+Promise.prototype.finally = function (callback) {
+  let P = this.constructor
+  return this.then(
+    (value) => { P.resolve(callback()).then(() => value)},
+    (reson) => { P.resolve(callback()).then(() => reson)}
+  )
+}
+
+const fn = () => console.log('非常官方');
+// 如果我们不相关函数时异步函数同步我们都想让其橘鼻涕异步处理的一些列处理方法
+// Promise.resolve().then(fn)
+// 这样写的话 同步操作会再下一轮事件中已婚行也就是 不会理解执行，也就相当与片成了异步了
+//  那么我们如果或想让异步异步执行，同步同步执行
+// (async function () {
+//   return fn()
+// })().then((res) => console.log(res)).catch(err => console.log(err)) // 第一种
+(async function() {
+  return fn();
+})().then().catch()
+
+// (function () {
+//   return new Promise(resolve => resolve(fn()))
+// })().then().catch()
+// (
+//   () => new Promise(
+//     resolve => resolve(fn())
+//   )
+// )().then().catch();
+// 以上操作就可以异步函数异步执行同步函数同步执行
+// 如果想讲异步函数编程同步执行呢
+function getFoo () {
+  return new Promise(function (resolve){
+    resolve('foo');
+  });
+}
+const promiseFun = () => new Promise(resolve => resolve('promise'))
+const genertorFun = function* () {
+  try {
+    var n1 = yield promiseFun();
+  } catch (error) {
+    console.error();  
+  }
+} // 调用链中抛出错误我们做出出压力
+function runer (gn) {
+  var it = gn();
+  function go (result) {
+      if (result.done) return result.value; 
+      return result.value.then(function (res){
+        return go(it.next(res))
+      },function(err) {
+        return go(it.throw(err))
+      })
+  }
+  go(it.next())
+} // genertor函数自动执行器
+runer(genertorFun); // 入口
+
 
 
 

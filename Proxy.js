@@ -24,7 +24,7 @@ console.log('getting_p_b_1:', proxy_obj1.name, proxy_obj1.age); // getting_p_b_1
 // 可取消的Proxy实例
 let target = {}
 let handle = {}
-let { proxy, revoke } = Proxy.revocable(target, handle) // ProxyHandler<T>): { proxy: T; revoke: () => void; };
+let { proxy:proxy, revoke:revoke } = Proxy.revocable(target, handle) // ProxyHandler<T>): { proxy: T; revoke: () => void; };
 proxy.foo = 2
 revoke() // 调用后，上一行代码将报错，因为Proxy实例被取消
 
@@ -51,3 +51,17 @@ var handle_bind = {
 var proxy_bind = new Proxy(target_bind, handle_bind)
 console.log('getDate:', proxy_bind.getDate());
 
+// 观察者模式简单实现
+var observe_obj = {a: 'a'}
+var queuedObservers = new Set();
+var observe = fn => queuedObservers.add(fn);
+var observable = obj => new Proxy(obj, {set});
+function set(target, key, value, receiver) {
+  console.log('receiver',receiver);
+  queuedObservers.forEach(observer => observer());
+  return result = Reflect.set(target, key, value, receiver);
+}
+observe(()=> console.log('看着你'))
+var b = observable(observe_obj);
+b.c = "c" // 看着你 receiver 
+console.log(a,b) // {a: 'a', c: 'c'}  
