@@ -252,19 +252,100 @@ for (const it of iteratorinterface(myObj)) {
   // console.log('key:', key, 'val:', val);
 }
 
+var gg = function* () {
+  var a = yield 'a'
+  // console.log(a)
+  var b = yield* ff()
+  // console.log(d2)
+  return 'c'
+}
+var ff = function* () {
+  yield 'd'
+  return 'e' 
+}
+var iterator = gg();
+console.log(iterator.toString());
+// var a = iterator.next()
+// var b = iterator.next()
+// var c = iterator.next()
+// console.log("iterator2",a,b,c)
 
+for (const iterator of gg()) {
+  console.log("iterator2",iterator)
+}
+function* gg2 () {
+  yield 'a';
+  var a = 1
+  console.log("try",a)
+  return  
+}
+var i_1 = gg2();
+// i_1.return() 
+console.log(i_1.next());
+console.log(i_1.next());
+console.log(i_1.next());
+console.log(i_1.next('1'));
 
+var gen_2 = function* () {
+  this.o = 'o'
+  yield this.a = 1;
+  yield this.b = 2;
+}
+var ite_1 = gen_2.call(gen_2.prototype);
+console.log("generator this:",ite_1.a,ite_1.b,ite_1.o) // undefined undefined undefined
+ite_1.next();
+ite_1.next();
+console.log("generator this:",ite_1.a,ite_1.b,ite_1.o) // undefined undefined o
 
+// 状态机
+var flag = true
+var fn = function () {
+  if(flag) 
+    console.log('Tick!');
+  else 
+    console.log('Tock!');
+  flag = !flag
+}
+fn(); fn(); // Tick! Tock!
+/// generator状态机
+var gen_3 = function* () {
+  while (true) {
+    yield console.log('Tick!');
+    yield console.log('Tock!');
+  }
+}
+var ite_3 = gen_3()
+ite_3.next() // Tick! 
+ite_3.next() // Tock!
+ite_3.next() // Tick!
 
+function* gen_4 () {
+  yield 'a'
+  yield* gen_5()
+  yield 'c'
+}
+function* gen_5() {
+  yield 'b'
+  yield* gen_4()
+  yield 'e'
+}
+// for (const iterator of gen_4()) {
+//   console.log('generator coroutine',iterator)
+// }
+// aximum call stack size exceeded  这么干的结果就是这个
 
-
-
-
-
-
-
-
-
+// iteraotr接口部署
+function* gen_6 (obj) {
+  let keys = Object.keys(obj)
+  for (let index = 0; index < keys.length; index++) {
+    const element = keys[index];
+    yield [element, obj[element]]
+  }
+}
+let obj_iterator = { foo: '1', bar: '2' } 
+for (const iterator of gen_6(obj_iterator)) {
+  console.log('iteraotr接口部署', iterator)
+}
 
 
 

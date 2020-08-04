@@ -172,6 +172,14 @@ function runer (gn) {
 } // genertor函数自动执行器
 runer(genertorFun); // 入口
 
+function foo () {
+  throw new Error('y')
+  function bar () {
+    throw new Error('x')
+  }
+  bar();
+}
+foo()
 
 
 
