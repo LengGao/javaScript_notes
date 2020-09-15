@@ -14,7 +14,7 @@
   * EventTarget.addEventListener() // 再EventTarget上注册特定事件类型得事件处理程序
   * EventTarget.removeEventListener() // EventTarget 删除事件侦听器 
   * EventTarget.dispatchEvent() // 将事件分派到此EventTarget，如果当前事件是可取消的，也就是cancelable 为true并且该事件得处理方法只要有一个嗲用了Event.preventDefault 则返回值为false，否则为true, 此方法意思就是再某个对象上调用指定得事件 target.dispatchEvent(eventObject)
-  */
+ */
 
 var EventTarget = function () {
   console.log('EventTarget:',this);
